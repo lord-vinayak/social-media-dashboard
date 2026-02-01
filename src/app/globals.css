@@ -1,8 +1,10 @@
-@import "tailwindcss";
-
-/* Font (keep simple, stable) */
+/* 1️⃣ ALL external imports FIRST */
 @import url("https://api.fontshare.com/v2/css?f[]=general-sans@300,400,500,600,700&display=swap");
 
+/* 2️⃣ THEN tailwind */
+@import "tailwindcss";
+
+/* 3️⃣ THEN your rules */
 :root {
   --background: #FAFBFC;
   --foreground: #171717;
@@ -20,4 +22,14 @@ body {
     "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

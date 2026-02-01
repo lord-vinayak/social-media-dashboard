@@ -1,27 +1,18 @@
-"use client";
-
-import React from "react";
-
-interface GlassCardProps {
+export default function GlassCard({
+  children,
+  className = "",
+}: {
   children: React.ReactNode;
   className?: string;
-}
-
-export default function GlassCard({ children, className = "" }: GlassCardProps) {
+}) {
   return (
     <div
       className={`
-        relative
-        bg-white/55
-        backdrop-blur-[28px]
-        border border-white/60
-        rounded-[32px]
-        shadow-[0_20px_60px_rgba(15,23,42,0.15)]
+       bg-white/80 backdrop-blur rounded-2xl shadow-sm border border-white/40 p-6 overflow-hidden
         ${className}
       `}
     >
-      <div className="pointer-events-none absolute inset-0 rounded-[32px] bg-gradient-to-br from-white/40 via-white/10 to-transparent opacity-80" />
-      <div className="relative z-10">{children}</div>
+      {children}
     </div>
   );
 }

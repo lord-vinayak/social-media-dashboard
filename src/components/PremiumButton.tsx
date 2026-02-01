@@ -10,6 +10,8 @@ interface PremiumButtonProps {
   onClick?: () => void;
   fullWidth?: boolean;
   className?: string;
+  disabled?: boolean;
+  type?: "button" | "submit";
 }
 
 const variantStyles: Record<ButtonVariant, string> = {
@@ -18,7 +20,7 @@ const variantStyles: Record<ButtonVariant, string> = {
   secondary:
     "bg-transparent border border-[#CBD5E1] text-[#475569] hover:bg-[#F8FAFC]",
   danger:
-    "bg-[#EF4444] text-white hover:bg-[#DC2626] shadow-[0px_2px_8px_rgba(239,68,68,0.2)]",
+    "bg-[#EF4444] text-white hover:bg-[#DC2626] shadow-[0px_2px-8px_rgba(239,68,68,0.2)]",
 };
 
 export default function PremiumButton({
@@ -27,11 +29,14 @@ export default function PremiumButton({
   onClick,
   fullWidth = false,
   className = "",
+  disabled = false,
+  type = "submit",
 }: PremiumButtonProps) {
   return (
     <button
-      type="submit"
+      type={type}
       onClick={onClick}
+      disabled={disabled}
       className={`
         px-6 py-3 rounded-lg font-medium text-sm
         transition-all duration-200
