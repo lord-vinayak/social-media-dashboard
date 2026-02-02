@@ -1,19 +1,37 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import BrandHealthCard from "@/components/dashboard/BrandHealthCard";
 import SentimentChart from "@/components/dashboard/SentimentChart";
 import EmotionChart from "@/components/dashboard/EmotionChart";
 import ActionCard from "@/components/dashboard/ActionCard";
 import DashboardSkeleton from "@/components/dashboard/DashboardSkeleton";
 import TopConcernsCard from "@/components/dashboard/TopConcernsCard";
+import { isAuthenticated } from "@/lib/auth";
 
+// Metadata is set in layout.tsx for client components
 export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
-    setTimeout(() => setLoading(false), 900); // fake load
+    setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+
+    // Check authentication
+    if (!isAuthenticated()) {
+      // Redirect to login if not authenticated
+      router.push("/login");
+      return;
+    }
+
+    setTimeout(() => setLoading(false), 900); // fake load
+  }, [router, mounted]);
 
   if (loading) return <DashboardSkeleton />;
 
@@ -28,15 +46,15 @@ export default function DashboardPage() {
 
       {/* CHARTS */}
       {/* ROW 1: Sentiment Trend */}
-<section>
-  <SentimentChart />
-</section>
+      <section>
+        <SentimentChart />
+      </section>
 
-{/* ROW 2: Concerns + Emotion */}
-<section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-  <TopConcernsCard />
-  <EmotionChart />
-</section>
+      {/* ROW 2: Concerns + Emotion */}
+      <section className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <TopConcernsCard />
+        <EmotionChart />
+      </section>
 
       {/* ACTIONS */}
       <section>

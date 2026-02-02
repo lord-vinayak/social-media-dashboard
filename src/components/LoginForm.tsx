@@ -2,21 +2,61 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import PremiumButton from "./PremiumButton";
 import FormInput from "./FormInput";
+import { login } from "@/lib/auth";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const router = useRouter();
+
+  const validateForm = (): boolean => {
+    if (!email || !password) {
+      setError("Please fill in all fields");
+      return false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError("Please enter a valid email address");
+      return false;
+    }
+
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters");
+      return false;
+    }
+
+    return true;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+
+    if (!validateForm()) {
+      return;
+    }
+
     setLoading(true);
 
     try {
+      // Simulate API call - Replace with actual authentication API
       await new Promise((res) => setTimeout(res, 1200));
-      console.log({ email, password });
+
+      // In production, validate credentials with backend API
+      // For now, accept any valid email/password
+      login(email);
+
+      // Navigate to dashboard
+      router.push("/dashboard");
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("An error occurred during login. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -44,6 +84,12 @@ export default function LoginForm() {
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+                {error}
+              </div>
+            )}
+
             <FormInput
               type="email"
               placeholder="your@company.com"
@@ -59,10 +105,10 @@ export default function LoginForm() {
             />
 
             <PremiumButton
+              type="submit"
               variant="primary"
               fullWidth
-              disabled={loading}
-            >
+              disabled={loading}>
               {loading ? "Signing in..." : "Sign in"}
             </PremiumButton>
           </form>
@@ -71,11 +117,10 @@ export default function LoginForm() {
           <p className="mt-8 text-center text-sm text-[#64748B]">
             Don’t have an account?{" "}
             <Link
-  href="/signup"
-  className="text-[#2563EB] font-medium hover:underline"
->
-  Sign up
-</Link>
+              href="/signup"
+              className="text-[#2563EB] font-medium hover:underline">
+              Sign up
+            </Link>
           </p>
         </div>
       </div>
